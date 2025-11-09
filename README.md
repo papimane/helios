@@ -22,6 +22,61 @@ Interface de supervision pour la surveillance en temps réel des dispositifs IoT
 
 ## 🚀 Installation
 
+### Option 1 : Avec Docker (Recommandé) 🐳
+
+#### Prérequis
+- Docker et Docker Compose installés
+- Make (optionnel, pour les commandes simplifiées)
+
+#### Démarrage rapide
+
+**Avec Makefile :**
+\`\`\`bash
+# Afficher toutes les commandes disponibles
+make help
+
+# Builder et démarrer l'application
+make docker-build
+make docker-up
+
+# L'application sera disponible sur http://localhost:3000
+\`\`\`
+
+**Sans Makefile (Docker Compose directement) :**
+\`\`\`bash
+# Builder l'image Docker
+docker-compose build
+
+# Démarrer les conteneurs
+docker-compose up -d
+
+# L'application sera disponible sur http://localhost:3000
+\`\`\`
+
+#### Commandes Docker utiles
+
+\`\`\`bash
+# Afficher les logs en temps réel
+make logs                    # ou docker-compose logs -f
+
+# Arrêter l'application
+make docker-down             # ou docker-compose down
+
+# Redémarrer l'application
+make docker-restart          # ou docker-compose restart
+
+# Ouvrir un shell dans le conteneur
+make docker-shell            # ou docker-compose exec helios-security sh
+
+# Nettoyer complètement (conteneurs + images)
+make docker-clean
+\`\`\`
+
+### Option 2 : Installation locale (sans Docker)
+
+#### Prérequis
+- Node.js 18+ et npm
+
 ### 1. Cloner ou télécharger le projet
 
 \`\`\`bash
@@ -171,18 +226,49 @@ Les tokens JWT Thingsboard expirent après un certain temps. L'application vous 
 
 Si vous rencontrez des erreurs CORS, vérifiez que votre instance Thingsboard autorise les requêtes depuis votre domaine.
 
-## 📝 Développement
+### Port 3000 déjà utilisé
 
-### Ajouter un nouveau type de dispositif
+Modifiez le port dans `docker-compose.yml` :
+\`\`\`yaml
+ports:
+  - "3001:3000"  # Utiliser le port 3001
+\`\`\`
 
-1. Ajoutez le type dans `lib/device-storage.ts`
-2. Créez une nouvelle page dans `app/`
-3. Créez les composants d'affichage dans `components/`
-4. Ajoutez la route dans le menu principal
+### Problèmes de build Docker
 
-### Déboguer l'application
+\`\`\`bash
+# Nettoyer et rebuilder
+make docker-clean
+make docker-build
+make docker-up
+\`\`\`
 
-Des logs de débogage sont présents dans le code avec le préfixe `[v0]`. Ouvrez la console du navigateur pour les voir.
+## 🔧 Commandes Makefile
+
+Le projet inclut un Makefile pour simplifier les opérations courantes :
+
+\`\`\`bash
+# Développement local
+make install           # Installer les dépendances
+make dev               # Démarrer en mode développement
+make build             # Builder l'application
+make start             # Démarrer en production
+
+# Docker
+make docker-build      # Builder l'image Docker
+make docker-up         # Démarrer les conteneurs
+make docker-down       # Arrêter les conteneurs
+make docker-restart    # Redémarrer les conteneurs
+make docker-logs       # Afficher les logs
+make docker-shell      # Ouvrir un shell dans le conteneur
+make docker-clean      # Nettoyer Docker complètement
+
+# Aliases pratiques
+make stop              # = docker-down
+make restart           # = docker-restart
+make logs              # = docker-logs
+make clean             # Nettoyer les fichiers de build
+\`\`\`
 
 ## 📄 Licence
 

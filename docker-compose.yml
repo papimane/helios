@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  helios-security:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: helios-security
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_THINGSBOARD_API_URL=https://platform.iokub.com:443/api
+    restart: unless-stopped
+    networks:
+      - helios-network
+
+networks:
+  helios-network:
+    driver: bridge
